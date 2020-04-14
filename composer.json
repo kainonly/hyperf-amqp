@@ -1,0 +1,24 @@
+{
+  "name": "kain/hyperf-amqp",
+  "description": "辅助 Hyperf 的 AMQP 客户端",
+  "require": {
+    "php": ">=7.4",
+    "hyperf/framework": "~1.1.0",
+    "kain/simplify-amqp": "^1.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hyperf\\AMQPClient\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "kain",
+      "email": "zhangtqx@vip.qq.com"
+    }
+  ],
+  "license": "MIT"
+}
