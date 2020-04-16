@@ -12,3 +12,5 @@
 ```shell
 composer require kain/hyperf-amqp
 ```
+
+> 当信道结束后连接也会自动断开不会持久建立，因此适用灵活的临时触发场景，不建议用于订阅消费等功能
