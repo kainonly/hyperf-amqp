@@ -5,56 +5,78 @@ namespace Hyperf\AMQPClient;
 
 use Closure;
 use Exception;
-use simplify\amqp\AMQPClient;
-use stdClass;
+use InvalidArgumentException;
+use Simplify\AMQP\AMQPClient;
+use Simplify\AMQP\AMQPManager;
 
 class AMQPClientFactory implements AMQPClientInterface
 {
     /**
-     * 客户端集合
-     * @var stdClass
+     * 配置集合
+     * @var array
      */
-    private stdClass $clients;
+    private array $options;
 
     /**
      * AMQPInstance constructor.
-     * @param stdClass $clients
+     * @param array $options
      */
-    public function __construct(stdClass $clients)
+    public function __construct(array $options)
     {
-        $this->clients = $clients;
+        $this->options = $options;
     }
 
     /**
-     * @param string $name
+     * @param string $name 配置标识
      * @return AMQPClient
      */
     private function client(string $name): AMQPClient
     {
-        return $this->clients->$name;
+        if (empty($this->options[$name])) {
+            throw new InvalidArgumentException("The [$name] does not exist.");
+        }
+        $option = $this->options[$name];
+        return new AMQPClient(
+            $option['host'],
+            (int)$option['port'],
+            $option['user'],
+            $option['password'],
+            $option['vhost'] ?? '/'
+        );
     }
 
     /**
      * @param Closure $closure
      * @param string $name
-     * @param array $options
      * @throws Exception
      * @inheritDoc
      */
-    public function channel(Closure $closure, string $name = 'default', array $options = []): void
+    public function channel(Closure $closure, string $name = 'default'): void
     {
-        $this->client($name)->channel($closure, $options);
+        $connection = $this->client($name)->getAMQPStreamConnection();
+        $channel = $connection->channel();
+        $closure(new AMQPManager($channel));
+        $channel->close();
+        $connection->close();
     }
 
     /**
      * @param Closure $closure
      * @param string $name
-     * @param array $options
      * @throws Exception
      * @inheritDoc
      */
-    public function channeltx(Closure $closure, string $name = 'default', array $options = []): void
+    public function channeltx(Closure $closure, string $name = 'default'): void
     {
-        $this->client($name)->channeltx($closure, $options);
+        $connection = $this->client($name)->getAMQPStreamConnection();
+        $channel = $connection->channel();
+        $channel->tx_select();
+        if ($closure(new AMQPManager($channel))) {
+            $channel->tx_commit();
+        } else {
+            $channel->tx_rollback();
+        }
+        $channel->close();
+        $connection->close();
     }
 }
