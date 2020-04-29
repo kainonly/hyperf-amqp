@@ -41,7 +41,8 @@ class AMQPClientFactory implements AMQPClientInterface
             (int)$option['port'],
             $option['user'],
             $option['password'],
-            $option['vhost'] ?? '/'
+            $option['vhost'] ?? '/',
+            $option['params'] ?? []
         );
     }
 
