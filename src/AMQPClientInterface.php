@@ -4,9 +4,17 @@ declare(strict_types=1);
 namespace Hyperf\AMQPClient;
 
 use Closure;
+use Simplify\AMQP\AMQPClient;
 
 interface AMQPClientInterface
 {
+
+    /**
+     * @param string $name
+     * @return AMQPClient
+     */
+    public function client(string $name): AMQPClient;
+
     /**
      * 创建信道
      * @param Closure $closure

@@ -30,7 +30,7 @@ class AMQPClientFactory implements AMQPClientInterface
      * @param string $name 配置标识
      * @return AMQPClient
      */
-    private function client(string $name): AMQPClient
+    public function client(string $name): AMQPClient
     {
         if (empty($this->options[$name])) {
             throw new InvalidArgumentException("The [$name] does not exist.");
