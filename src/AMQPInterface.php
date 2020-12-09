@@ -6,14 +6,14 @@ namespace Hyperf\AMQPClient;
 use Closure;
 use Simplify\AMQP\AMQPClient;
 
-interface AMQPClientInterface
+interface AMQPInterface
 {
 
     /**
      * @param string $name
      * @return AMQPClient
      */
-    public function client(string $name): AMQPClient;
+    public function client(string $name = 'default'): AMQPClient;
 
     /**
      * 创建信道
