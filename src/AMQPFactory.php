@@ -6,13 +6,13 @@ namespace Hyperf\AMQPClient;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\ContainerInterface;
 
-class AMQPClientService
+class AMQPFactory
 {
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get(ConfigInterface::class);
         $options = $config->get('amqp');
-        return make(AMQPClientFactory::class, [
+        return make(AMQP::class, [
             $options
         ]);
     }

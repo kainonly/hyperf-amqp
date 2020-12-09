@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use Simplify\AMQP\AMQPClient;
 use Simplify\AMQP\AMQPManager;
 
-class AMQPClientFactory implements AMQPClientInterface
+class AMQP implements AMQPInterface
 {
     /**
      * 配置集合
@@ -18,7 +18,7 @@ class AMQPClientFactory implements AMQPClientInterface
     private array $options;
 
     /**
-     * AMQPInstance constructor.
+     * AMQPClientService constructor.
      * @param array $options
      */
     public function __construct(array $options)
@@ -30,7 +30,7 @@ class AMQPClientFactory implements AMQPClientInterface
      * @param string $name 配置标识
      * @return AMQPClient
      */
-    public function client(string $name): AMQPClient
+    public function client(string $name = 'default'): AMQPClient
     {
         if (empty($this->options[$name])) {
             throw new InvalidArgumentException("The [$name] does not exist.");
